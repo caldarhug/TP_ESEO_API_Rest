@@ -1,15 +1,13 @@
 package com.controller;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,38 +20,60 @@ public class VilleController {
 
 	@Autowired
 	VilleBLO villeBLOService;
-	
-	// fonction pour récupérer le contenu de la BDD
-	@RequestMapping(value = "/ville", method = RequestMethod.GET)
+
+	@GetMapping("/ville")
 	@ResponseBody
-	public ArrayList<Ville> get(@RequestParam(required = false, value = "codePostal") String codePostal) {
-		System.out.println("get");
-		// TODO : mon code vers la BDD
-		
-		ArrayList<Ville> listeVille = villeBLOService.getInfoVilles(codePostal);
-		
-		return listeVille;
+	public List<Ville> getVilles(@RequestParam(required = false, value = "codePostal") String codePostal) {
+		return villeBLOService.getInfoVilles(codePostal);
 	}
-	
-	@GetMapping(value = "/ville/{codePostal}")
+
+	@GetMapping("/villes/{codePostal}")
 	@ResponseBody
-	public ArrayList<Ville> getVilleByCodePostal(@PathVariable("codePostal") String codePostal) {
-		System.out.println("getVilleByPostalCode");
-		
-		ArrayList<Ville> listeVille = villeBLOService.getVilleByPostalCode(codePostal);
-		
-		return listeVille;
+	public List<Ville> getVilleByCodePostal(@PathVariable("codePostal") String codePostal) {
+		return villeBLOService.getVilleByPostalCode(codePostal);
 	}
-	
-	// TODO :
-	// fonction pour enregistrer un élément dans la BDD
-//	@PostMapping(value = "/ville")
-//	public ResponseEntity<Ville> addVille(@RequestBody Ville ville) {
-//		Ville ville = villeBLOService.save(ville);
-//	    if (ville == null) {
-//	        throw new ServerException();
-//	    } else {
-//	        return new ResponseEntity<>(user, HttpStatus.CREATED);
-//	    }
-//	}
+
+	@GetMapping("/ville/{codeCommune}")
+	@ResponseBody
+	public Ville getVilleByCodeCommune(@PathVariable("codeCommune") String codeCommune) {
+		return villeBLOService.getVilleByCodeCommune(codeCommune);
+	}
+
+	@PostMapping("/ville/add")
+	@ResponseBody
+	public String addVille(@RequestParam(required = true, value="codeCommune") String codeCommune,
+			@RequestParam(required = true, value="nomCommune") String nomCommune,
+			@RequestParam(required = true, value="codePostal") String codePostal,
+			@RequestParam(required = false, value="libelleAcheminement") String libelleAcheminement,
+			@RequestParam(required = false, value="ligne") String ligne,
+			@RequestParam(required = false, value="latitude") String latitude,
+			@RequestParam(required = false, value="longitude") String longitude
+			){
+		return villeBLOService.addVille(codeCommune, nomCommune, codePostal, libelleAcheminement, ligne, latitude, longitude);
+	}
+
+	@PutMapping("/ville/put")
+	@ResponseBody
+	public String putVille(@RequestParam(required = true, value="codeCommune") String codeCommune,
+			@RequestParam(required = true, value="nomCommune") String nomCommune,
+			@RequestParam(required = true, value="codePostal") String codePostal,
+			@RequestParam(required = false, value="libelleAcheminement") String libelleAcheminement,
+			@RequestParam(required = false, value="ligne") String ligne,
+			@RequestParam(required = false, value="latitude") String latitude,
+			@RequestParam(required = false, value="longitude") String longitude) {
+		try {
+			Ville ville = villeBLOService.getVilleByCodeCommune(codeCommune);
+			System.out.println(ville.getNomCommune());
+			return villeBLOService.modifyVille(codeCommune, nomCommune, codePostal, libelleAcheminement, ligne, latitude, longitude);
+		}
+		catch(Exception e) {
+			return villeBLOService.addVille(codeCommune, nomCommune, codePostal, libelleAcheminement, ligne, latitude, longitude);
+		}
+	}
+
+	@DeleteMapping("/ville/delete")
+	@ResponseBody
+	public String deleteVille(@RequestParam(required = true, value="codeCommune") String codeCommune) {
+		return villeBLOService.deleteVille(codeCommune);
+	}
 }

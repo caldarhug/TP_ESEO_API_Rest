@@ -23,5 +23,5 @@ public class Ville implements Serializable {
 	private String codePostal;
 	private String libelleAcheminement;
 	private String ligne;
-//	private Coordonnee coordonnee;
+	private Coordonnee coordonnee;
 }
