@@ -11,5 +11,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Coordonnee {
 	private String latitude;
-	private String longitutde;
+	private String longitude;
 }
