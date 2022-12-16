@@ -64,7 +64,7 @@ public class VilleController {
 		try {
 			Ville ville = villeBLOService.getVilleByCodeCommune(codeCommune);
 			System.out.println(ville.getNomCommune());
-			return villeBLOService.modifyVille(codeCommune, nomCommune, codePostal, libelleAcheminement, ligne, latitude, longitude);
+			return villeBLOService.modifyVille(codeCommune, nomCommune.replace("_", " "), codePostal, libelleAcheminement.replace("_", " "), ligne.replace("_", " "), latitude, longitude);
 		}
 		catch(Exception e) {
 			return villeBLOService.addVille(codeCommune, nomCommune, codePostal, libelleAcheminement, ligne, latitude, longitude);
