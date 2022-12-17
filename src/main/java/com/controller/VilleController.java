@@ -62,8 +62,6 @@ public class VilleController {
 			@RequestParam(required = false, value="latitude") String latitude,
 			@RequestParam(required = false, value="longitude") String longitude) {
 		try {
-			Ville ville = villeBLOService.getVilleByCodeCommune(codeCommune);
-			System.out.println(ville.getNomCommune());
 			return villeBLOService.modifyVille(codeCommune, nomCommune.replace("_", " "), codePostal, libelleAcheminement.replace("_", " "), ligne.replace("_", " "), latitude, longitude);
 		}
 		catch(Exception e) {
